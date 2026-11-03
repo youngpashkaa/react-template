@@ -101,8 +101,8 @@ Each domain folder exposes an `index.ts` barrel and a `@alias` (configured in
 The core idea: **author every size in `rem` as if it were `px`, and the whole layout
 scales fluidly with the viewport.** Configured in `src/index.css`.
 
-- `html` has a `vw`-based font-size (`0.052vw` desktop, `0.3125vw` below 999px), making
-  **`1rem ≈ 1px`** at the design width. `body` sets a `16rem` (≈16px) base text size,
+- `html` has a `vw`-based font-size (`calc(100vw / 1920)` desktop, `calc(100vw / 480)` below 999px), making
+  **`1rem = 1px`** at the design width. `body` sets a `16rem` (≈16px) base text size,
   inherited by everything — including modals in the `#popups` portal.
 - **`--spacing: 4rem`** in `@theme` rescales Tailwind's spacing scale so **1 unit = 4rem
   (≈4px at design width)** — same px semantics as stock Tailwind, but in scalable rem:

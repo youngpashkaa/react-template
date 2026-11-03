@@ -36,8 +36,8 @@ pnpm prettier     # prettier --write src
 The core idea: **author every size in `rem` as if it were `px`, and the whole layout
 scales fluidly with the viewport.** This is configured entirely in `src/index.css`.
 
-1. **Fluid root font-size** (`@layer base`): `html, body { font-size: 0.052vw }` on desktop,
-   `0.3125vw` below 999px. At the design widths this makes **`1rem ≈ 1px`**, so a `24rem`
+1. **Fluid root font-size** (`@layer base`): `html { font-size: calc(100vw / 1920) }` on desktop,
+   `calc(100vw / 480)` below 999px. At the design widths (1920px / 480px) this makes **`1rem = 1px`**, so a `24rem`
    value renders ~24px at the design size and scales up/down with the window.
 
 2. **`--spacing: 4rem`** in `@theme` rescales Tailwind's spacing scale so **1 unit = 4rem
@@ -60,8 +60,8 @@ scales fluidly with the viewport.** This is configured entirely in `src/index.cs
    font-size). Define text sizes in `@theme` when needed (e.g. `--text-base: 13rem`).
 
 5. **Design tokens live in `@theme`**: colors (`bg-black`, `text-white`, `bg-popup`,
-   `bg-popup-mobile`) and fonts (`font-inter`, `font-rosatom`, `font-ibm-mono`,
-   `font-ibm-sans`). Add new tokens here, not in component files.
+   `bg-popup-mobile`) and the font (`font-inter`, the Inter variable font
+   from `public/fonts`). Add new tokens here, not in component files.
 
 There are **no styled-components** — the project was migrated off it. Style with utility
 classes; use the `cn(...)` helper from `@utils` to merge/conditionally join class strings.
