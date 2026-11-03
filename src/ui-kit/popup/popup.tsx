@@ -19,14 +19,20 @@ export const Popup = (props: PopupProps) => {
 function useMountPopup(opened: boolean) {
   const [mounted, setMounted] = useState(false)
 
+  // Mount immediately on open (adjusting state during render, so there's no extra committed frame).
+  if (opened && !mounted) {
+    setMounted(true)
+  }
+
+  // Unmount after the exit animation; the cleanup cancels the timer if the popup reopens meanwhile.
   useEffect(() => {
-    if (opened && !mounted) {
-      setMounted(true)
-    } else if (!opened && mounted) {
-      setTimeout(() => {
-        setMounted(false)
-      }, POPUP_DELAY)
-    }
+    if (opened) return
+
+    const timer = setTimeout(() => {
+      setMounted(false)
+    }, POPUP_DELAY)
+
+    return () => clearTimeout(timer)
   }, [opened])
 
   return { mounted }

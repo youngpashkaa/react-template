@@ -4,6 +4,8 @@ import { Breakpoints } from '@app/tokens'
 import { POPUP_DELAY } from '@constants'
 
 export const overlayAnimation = {
+  appear: 'overlayEnter',
+  appearActive: 'overlayEnterActive',
   enter: 'overlayEnter',
   enterActive: 'overlayEnterActive',
   exit: 'overlayExit',
@@ -17,6 +19,8 @@ interface TransitionMixinParams {
 }
 
 export const contentAnimation = {
+  appear: 'contentEnter',
+  appearActive: 'contentEnterActive',
   enter: 'contentEnter',
   enterActive: 'contentEnterActive',
   exit: 'contentExit',
