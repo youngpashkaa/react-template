@@ -34,12 +34,12 @@ pnpm prettier     # prettier --write src
 The core idea: **author every size in `rem` as if it were `px`, and the whole layout
 scales fluidly with the viewport.** Set up in `src/index.css`:
 
-- `html, body { font-size: 0.052vw }` on desktop, `0.3125vw` below 999px. At the design
-  widths this makes **`1rem ≈ 1px`**, so a styled rule of `padding: 40rem` renders ~40px
+- `html { font-size: calc(100vw / 1920) }` on desktop, `calc(100vw / 480)` below 999px. At the
+  design widths (1920px / 480px) this makes **`1rem = 1px`**, so a styled rule of `padding: 40rem` renders ~40px
   at the design size and scales up/down with the window. **Write design `Npx` as `Nrem`**
   in styled-components.
 - Global CSS vars in `:root`: `--full-height` (mobile-vh-safe height), `--min-height`,
-  and the `--font-*` families (Inter, Rosatom, IBMPlexMono, IBMPlexSans).
+  and `--font-inter` (the Inter variable font, loaded from `public/fonts`).
 
 Components are styled with **styled-components** (`styled.div\`…\``), typically in a
 co-located `*.styled.ts` file. Design tokens live in `src/tokens`:

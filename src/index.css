@@ -2,40 +2,7 @@
   font-family: 'Inter';
   src: url('/fonts/Inter-Variable.woff2') format("woff2 supports variations"),
 		url('/fonts/Inter-Variable.woff2') format("woff2-variations");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Rosatom';
-  src: url('/fonts/Rosatom-Regular.woff2') format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: 'IBMPlexMono';
-  src: url('/fonts/IBMPlexMono-SemiBold.woff2') format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'IBMPlexMono';
-  src: url('/fonts/IBMPlexMono-Regular.woff2') format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'IBMPlexSans';
-  src: url('/fonts/IBMPlexSans-Bold.woff2') format("woff2");
-  font-weight: 700;
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -45,9 +12,6 @@
   --min-height: 860rem;
 
 	--font-inter: 'Inter', 'Arial', sans-serif;
-	--font-rosatom: 'Rosatom', 'Inter', 'Arial', sans-serif;
-	--font-ibm-mono: 'IBMPlexMono', 'Inter', 'Arial', sans-serif;
-	--font-ibm-sans: 'IBMPlexSans', 'Inter', 'Arial', sans-serif;
 }
 
 html {
@@ -68,13 +32,13 @@ html {
 }
 
 html {
-  /* Defines the rem unit (≈1px at the design width); scales fluidly via vw. */
-  font-size: 0.052vw;
+  /* Defines the rem unit (1rem = 1px at a 1920px-wide viewport); scales fluidly with the width. */
+  font-size: calc(100vw / 1920);
 }
 
 html,
 body {
-  font-family: var(--font-ibm-mono);
+  font-family: var(--font-inter);
 	font-weight: 400;
   position: relative;
   background-color: #000000;
@@ -91,9 +55,9 @@ body {
 }
 
 @media screen and (max-width: 999px) {
-  /* Only the rem unit changes on mobile; body stays 16rem and scales with it. */
+  /* Only the rem unit changes on mobile (1rem = 1px at a 480px-wide viewport); body stays 16rem and scales with it. */
   html {
-    font-size: 0.3125vw;
+    font-size: calc(100vw / 480);
   }
   html,
   body {
