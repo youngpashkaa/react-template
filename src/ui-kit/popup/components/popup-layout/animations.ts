@@ -1,5 +1,7 @@
 // CSSTransition classNames maps — the matching styles live in ./popup-transitions.css
 export const overlayAnimation = {
+  appear: 'overlayEnter',
+  appearActive: 'overlayEnterActive',
   enter: 'overlayEnter',
   enterActive: 'overlayEnterActive',
   exit: 'overlayExit',
@@ -7,6 +9,8 @@ export const overlayAnimation = {
 }
 
 export const contentAnimation = {
+  appear: 'contentEnter',
+  appearActive: 'contentEnterActive',
   enter: 'contentEnter',
   enterActive: 'contentEnterActive',
   exit: 'contentExit',

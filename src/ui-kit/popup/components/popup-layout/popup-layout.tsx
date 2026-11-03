@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 
 import { clearAllBodyScrollLocks } from 'body-scroll-lock'
 import { CSSTransition } from 'react-transition-group'
@@ -13,39 +13,30 @@ import { contentAnimation, overlayAnimation } from './animations'
 export const PopupLayout: FC<PopupProps> = ({ onClose, opened, children, mounted, className, ...rest }) => {
   const overlayRef = useRef<HTMLDivElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
-  const targetRef = useRef<HTMLDivElement | null>(null)
-  const root = document.getElementById('root')
-
-  const [animationIn, setAnimationIn] = useState(false)
 
   useEffect(() => {
-    setAnimationIn(opened)
+    const root = document.getElementById('root')
+    if (!root || !opened) return
 
-    if (!targetRef.current) return
-    if (opened) {
-      root!.style.overflow = 'hidden'
-    } else {
-      root!.style.overflow = ''
-    }
+    root.style.overflow = 'hidden'
 
     return () => {
       clearAllBodyScrollLocks()
-      root!.style.overflow = ''
+      root.style.overflow = ''
     }
   }, [opened])
 
   return (
     <div
-      ref={targetRef}
       className={cn(
         'fixed top-0 left-0 z-[1] h-full w-full items-center justify-center overflow-auto overflow-x-hidden py-[30px] max-desktop:p-0',
         mounted ? 'flex' : 'hidden'
       )}
     >
-      <CSSTransition in={Boolean(animationIn)} nodeRef={overlayRef} timeout={POPUP_DELAY} classNames={overlayAnimation}>
+      <CSSTransition in={opened} appear nodeRef={overlayRef} timeout={POPUP_DELAY} classNames={overlayAnimation}>
         <div ref={overlayRef} onClick={onClose} className="fixed inset-0 z-[2] h-full w-full bg-[rgba(0,0,0,0.774)]" />
       </CSSTransition>
-      <CSSTransition in={Boolean(animationIn)} nodeRef={contentRef} timeout={POPUP_DELAY} classNames={contentAnimation}>
+      <CSSTransition in={opened} appear nodeRef={contentRef} timeout={POPUP_DELAY} classNames={contentAnimation}>
         <div
           {...rest}
           ref={contentRef}
