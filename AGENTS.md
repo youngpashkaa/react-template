@@ -17,7 +17,6 @@ directories that don't exist yet — create them as features land.
 pnpm dev          # vite dev server (HTTPS via basic-ssl, --host)
 pnpm build        # tsc (typecheck) && vite build  → dist/
 pnpm preview      # serve the production build
-pnpm generate     # plop: scaffold a new component (see "Code generation")
 pnpm lint:check   # eslint, no fixes (use this to verify)
 pnpm lint         # eslint --fix
 pnpm prettier     # prettier --write src
@@ -42,7 +41,8 @@ scales fluidly with the viewport.** Set up in `src/index.css`:
   and `--font-inter` (the Inter variable font, loaded from `public/fonts`).
 
 Components are styled with **styled-components** (`styled.div\`…\``), typically in a
-co-located `*.styled.ts` file. Design tokens live in `src/tokens`:
+co-located `*.styled.ts`file. Design tokens live in`src/tokens`:
+
 - `Colors` (`@tokens`) — color constants used inside styled blocks.
 - `Breakpoints` — `{ MOBILE: 320, DESKTOP: 999.9 }`. Used both in styled-components media
   queries (`@media (max-width: ${Breakpoints.DESKTOP}px)`) **and** in JS
@@ -54,11 +54,6 @@ co-located `*.styled.ts` file. Design tokens live in `src/tokens`:
   `@ui-kit`, `@stores`, `@pages`, `@hooks`, `@components`, `@tokens`, `@constants`,
   `@utils`, `@app/*`, `@images/*`). Every feature dir has an `index.ts` barrel that
   re-exports its public surface; import from the alias, not deep paths.
-
-- **Code generation.** `pnpm generate` (plop) scaffolds `src/<folder>/<name>/` with a
-  component, optional `*.styled.ts` and `types.ts`, an `index.ts`, and auto-appends the
-  export to the folder barrel at the `/* PLOP_INJECT_IMPORT */` marker. Preserve that
-  marker comment.
 
 - **Popup system** (`src/ui-kit/popup`): `Popup` renders into a portal (`PopupPortal`) and
   manages mount/unmount with a `POPUP_DELAY` (300ms) timer. `PopupLayout` does the
@@ -77,23 +72,23 @@ through an `index.ts` **barrel** and an `@alias` (see `tsconfig.json` paths). Tw
 patterns are used: **folder-per-unit** (a kebab-case folder + main file + `index.ts`) for
 components/pages/providers, and **flat files** for hooks/stores/constants.
 
-| Adding a… | Where | How to wire it |
-|---|---|---|
-| Shared **component** | `src/components/<name>/` | `pnpm generate` → folder `components` |
-| Reusable **UI primitive** | `src/ui-kit/<name>/` | `pnpm generate` → folder `ui-kit` |
-| **Page** | `src/pages/<name>/` | `pnpm generate` → folder `pages` |
-| **Hook** | `src/hooks/use-<name>.ts` | add `export * from './use-<name>'` to `src/hooks/index.ts` |
-| **Store** (Zustand) | `src/stores/use-<name>.ts` | add `export * from './use-<name>'` to `src/stores/index.ts` |
-| **Provider** | `src/providers/<name>-provider/` (`<name>-provider.tsx` + `index.ts`) | re-export from `src/providers/index.ts` **and** mount it in `src/app.tsx` |
-| **Design token** | `src/tokens/<group>/` (+ `index.ts`) | re-export from `src/tokens/index.ts` |
-| **Constant** | `src/constants/<file>.ts` | export from `src/constants/index.ts` |
-| **Util** | `src/utils/` | export from `src/utils/index.ts` |
+| Adding a…                 | Where                                                                 | How to wire it                                                                  |
+| ------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Shared **component**      | `src/components/<name>/`                                              | create the folder by hand + `index.ts`; add export to `src/components/index.ts` |
+| Reusable **UI primitive** | `src/ui-kit/<name>/`                                                  | create the folder by hand + `index.ts`; add export to `src/ui-kit/index.ts`     |
+| **Page**                  | `src/pages/<name>/`                                                   | create the folder by hand + `index.ts`; add export to `src/pages/index.ts`      |
+| **Hook**                  | `src/hooks/use-<name>.ts`                                             | add `export * from './use-<name>'` to `src/hooks/index.ts`                      |
+| **Store** (Zustand)       | `src/stores/use-<name>.ts`                                            | add `export * from './use-<name>'` to `src/stores/index.ts`                     |
+| **Provider**              | `src/providers/<name>-provider/` (`<name>-provider.tsx` + `index.ts`) | re-export from `src/providers/index.ts` **and** mount it in `src/app.tsx`       |
+| **Design token**          | `src/tokens/<group>/` (+ `index.ts`)                                  | re-export from `src/tokens/index.ts`                                            |
+| **Constant**              | `src/constants/<file>.ts`                                             | export from `src/constants/index.ts`                                            |
+| **Util**                  | `src/utils/`                                                          | export from `src/utils/index.ts`                                                |
 
 Naming: **kebab-case** files/folders, **PascalCase** component/provider exports,
 `use-x.ts` → `useX` for hooks and stores. Always re-export from the domain's `index.ts`
-and import via the alias (`@hooks`, `@stores`, …), never a deep path. Providers are the
-one thing the generator can't fully wire — after creating the folder, add it to
-`providers/index.ts` and compose it in `app.tsx`.
+and import via the alias (`@hooks`, `@stores`, …), never a deep path. Providers also need
+mounting — after creating the folder, add it to `providers/index.ts` and compose it in
+`app.tsx`.
 
 ## Conventions to follow
 

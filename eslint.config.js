@@ -42,7 +42,7 @@ export default [
     },
   },
   {
-    files: ['*.{js,ts}', 'plopfile.js', 'vite.config.ts'],
+    files: ['*.{js,ts}', 'vite.config.ts'],
     languageOptions: {
       globals: globals.node,
     },
