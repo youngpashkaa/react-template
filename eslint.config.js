@@ -10,7 +10,7 @@ import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import typescriptParser from '@typescript-eslint/parser'
 
 const sourceFiles = ['src/**/*.{ts,tsx}']
-const toolingFiles = ['*.{js,ts}', 'plop-templates/**/*.js']
+const toolingFiles = ['*.{js,ts}']
 
 export default [
   {

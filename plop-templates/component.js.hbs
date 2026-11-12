@@ -1,8 +1,0 @@
-import { FC } from 'react'
-{{#if isTypes}}import { {{pascalCase name}}Props } from './types'{{/if}}
-
-export const {{pascalCase name}}: FC{{#if isTypes}}<{{pascalCase name}}Props>{{/if}} = () => {
-  return <div>{{pascalCase name}}</div>
-}
-
-export default {{pascalCase name}}
