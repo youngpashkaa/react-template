@@ -59,7 +59,7 @@ Aliases in `tsconfig.json`: `@pages/*` and `@shared/*`. There is no alias for `a
 - A lazy page gets its own entry file. Do not route through one barrel that imports every page.
 - Import order is enforced by `simple-import-sort`.
 
-ESLint (`scripts/eslint/import-boundaries.js`, rule `no-restricted-imports`) enforces layer direction, page isolation, index-only imports and the no-own-index rule. It does not check where barrels exist or whether a page uses a lazy entry. The generator reads the `src/pages` and `src/shared` folders, so new pages and units need no config change.
+ESLint (`scripts/eslint/import-boundaries.js`, rule `no-restricted-imports`) enforces layer direction, page isolation, index-only imports and the no-own-index rule, for static imports, `export ... from` and `import()` with a literal path. Relative paths that cross a layer are caught for pages and `app`. It does not check relative imports between two `shared` units, computed `import()` paths, where barrels exist, or whether a page uses a lazy entry. The generator reads the `src/pages` and `src/shared` folders, so new pages and units need no config change.
 
 ## Wiring
 
