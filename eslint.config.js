@@ -10,39 +10,10 @@ import eslint from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import typescriptParser from '@typescript-eslint/parser'
 
+import { importBoundaryConfigs } from './scripts/eslint/import-boundaries.js'
+
 const sourceFiles = ['src/**/*.{ts,tsx}']
 const toolingFiles = ['*.{js,ts}']
-
-const domainAliases = {
-  components: '@components',
-  constants: '@constants',
-  hooks: '@hooks',
-  models: '@models',
-  pages: '@pages',
-  providers: '@providers',
-  stores: '@stores',
-  tokens: '@tokens',
-  'ui-kit': '@ui-kit',
-  utils: '@utils',
-}
-
-const deepImportPattern = {
-  group: ['@app/*'],
-  message: 'Import through the domain alias barrel instead of a deep @app/* path.',
-}
-
-const domainImportRules = Object.entries(domainAliases).map(([dir, alias]) => ({
-  files: [`src/${dir}/**/*.{ts,tsx}`],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [{ name: alias, message: `Use a relative import inside ${alias}, not its own barrel.` }],
-        patterns: [deepImportPattern],
-      },
-    ],
-  },
-}))
 
 export default [
   {
@@ -88,17 +59,11 @@ export default [
       ],
     },
   },
-  {
-    files: sourceFiles,
-    rules: {
-      'no-restricted-imports': ['error', { patterns: [deepImportPattern] }],
-    },
-  },
-  ...domainImportRules,
+  ...importBoundaryConfigs,
   {
     files: sourceFiles,
     plugins: { 'better-tailwindcss': eslintPluginBetterTailwindcss },
-    settings: { 'better-tailwindcss': { entryPoint: 'src/index.css' } },
+    settings: { 'better-tailwindcss': { entryPoint: 'src/app/styles/index.css' } },
     rules: { 'better-tailwindcss/enforce-canonical-classes': 'error' },
   },
   eslintConfigPrettier,

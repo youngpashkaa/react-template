@@ -22,19 +22,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@providers": ["./src/providers/index"],
-      "@ui-kit": ["./src/ui-kit/index"],
-      "@stores": ["./src/stores/index"],
-      "@pages": ["./src/pages/index"],
-      "@utils": ["./src/utils/index"],
-      "@models": ["./src/models/index"],
-      "@hooks": ["./src/hooks/index"],
-      "@router": ["./src/router/index"],
-      "@components": ["./src/components/index"],
-      "@tokens": ["./src/tokens/index"],
-      "@images/*": ["./src/assets/images/*"],
-      "@app/*": ["./src/*"],
-      "@constants": ["./src/constants/index"],
+      "@pages/*": ["./src/pages/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src"],

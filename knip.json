@@ -1,5 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["src/*/index.ts"],
+  "entry": ["src/pages/*/index.ts", "src/shared/*/index.ts", "src/shared/ui/*/index.ts"],
   "ignoreUnresolved": ["./vite-env-override.d.ts"]
 }

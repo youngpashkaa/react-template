@@ -1,14 +1,14 @@
 ---
 paths:
   - 'src/**/*.{tsx,css}'
-  - 'src/tokens/**'
+  - 'src/shared/tokens/**'
   - 'index.html'
   - '.prettierrc'
 ---
 
 # Styling with Tailwind CSS v4
 
-Tailwind v4 is configured in CSS only: `src/index.css` starts with `@import 'tailwindcss'` and declares tokens in `@theme`. There is no `tailwind.config.js` and no PostCSS config.
+Tailwind v4 is configured in CSS only: `src/app/styles/index.css` starts with `@import 'tailwindcss'` and declares tokens in `@theme`. There is no `tailwind.config.js` and no PostCSS config.
 
 ## Fluid rem
 
@@ -25,23 +25,23 @@ The layout is desktop-first by convention, which is the opposite of Tailwind's m
 - `desktop:` is `min-width: 1000px`.
 - `max-desktop:` is the exact complement (`width < 1000px`). In plain CSS use `@variant max-desktop { ... }`, not a `max-width` media query.
 - `sm:`, `md:`, `lg:` and the other defaults are cleared and produce nothing. Do not add them back.
-- `--breakpoint-desktop` in `src/index.css` is the only definition (in an `@theme static` block so it stays in `:root`). JavaScript reads it with `getComputedStyle` in `use-device.ts`, which throws if the variable is missing; do not add a JS constant.
+- `--breakpoint-desktop` in `src/app/styles/index.css` is the only definition (in an `@theme static` block so it stays in `:root`). JavaScript reads it with `getComputedStyle` in `use-device.ts`, which throws if the variable is missing; do not add a JS constant.
 
 ## Tokens
 
-- Colors, fonts and other tokens go in `@theme` in `src/index.css`, not in component files. Current tokens: `--color-black`, `--color-white`, `--color-popup`, `--color-popup-mobile`, `--font-inter`.
+- Colors, fonts and other tokens go in `@theme` in `src/app/styles/index.css`, not in component files. Current tokens: `--color-black`, `--color-white`, `--color-popup`, `--color-popup-mobile`, `--font-inter`.
 - Tailwind's default `--text-*` scale is cleared, because it would render at about 1px under the vw root. Add a `--text-*` token if a named text size is needed.
 - Use `:root` for plain CSS variables that need no utility (for example `--full-height`).
-- `src/tokens/colors` mirrors black and white for JavaScript. Change the CSS and the mirror together.
+- `src/shared/tokens/colors` mirrors black and white for JavaScript. Change the CSS and the mirror together.
 - There is no dark mode. Do not add dark-mode variants.
 
 ## Writing classes
 
-- Tailwind scans only `src` (`source('.')` on the import in `src/index.css`). Classes used only in `index.html`, docs or other folders are not generated.
+- Tailwind scans only `src` (`source('../..')` on the import in `src/app/styles/index.css`). Classes used only in `index.html`, docs or other folders are not generated.
 - Class names must be complete static strings. Tailwind scans source as plain text, so `` `bg-${color}` `` produces nothing. Map props or state to full class names.
-- Use `cn(...)` from `@utils` to join classes conditionally. It does not merge conflicts: never pass two utilities that set the same property. Expose a prop or variant instead of letting callers override with `className`.
+- Use `cn(...)` from `@shared/utils` to join classes conditionally. It does not merge conflicts: never pass two utilities that set the same property. Expose a prop or variant instead of letting callers override with `className`.
 - Class order is owned by `prettier-plugin-tailwindcss` (configured for `cn`). Do not hand-sort; run `pnpm prettier`.
-- Write canonical classes: `z-2` not `z-[2]`, `size-8` not `h-8 w-8`, `transform-[...]` not `[transform:...]`. ESLint `better-tailwindcss/enforce-canonical-classes` reports the rest and `pnpm lint` fixes it. It reads `src/index.css`, so it knows the custom `--spacing` and breakpoints.
+- Write canonical classes: `z-2` not `z-[2]`, `size-8` not `h-8 w-8`, `transform-[...]` not `[transform:...]`. ESLint `better-tailwindcss/enforce-canonical-classes` reports the rest and `pnpm lint` fixes it. It reads `src/app/styles/index.css`, so it knows the custom `--spacing` and breakpoints.
 - `cva`, `clsx` and `tailwind-merge` are not installed. Do not use them without asking.
 
 ## v3 habits that break in v4

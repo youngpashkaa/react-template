@@ -1,4 +1,4 @@
 # Add files here to ignore them from prettier formatting
 dist
 coverage
-src/index.css
+src/app/styles/index.css

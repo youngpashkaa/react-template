@@ -3,10 +3,10 @@ import { FC, useEffect, useRef } from 'react'
 import { clearAllBodyScrollLocks } from 'body-scroll-lock'
 import { CSSTransition } from 'react-transition-group'
 
-import { POPUP_DELAY } from '@constants'
-import { cn } from '@utils'
+import { cn } from '@shared/utils'
 
 import './popup-transitions.css'
+import { POPUP_DELAY } from '../../constants'
 import { PopupProps } from '../../types'
 import { contentAnimation, overlayAnimation } from './animations'
 

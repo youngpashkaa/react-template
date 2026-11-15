@@ -10,7 +10,7 @@ is a **fluid, rem-based design system**: every size is authored in `rem` as if i
 - **Fluid rem-based scaling** — design in `px`, render in scalable `rem`; one root
   font-size in `vw` makes the whole UI scale with the viewport (see [Styling](#styling-system)).
 - **Tailwind v4 CSS-first config** — tokens, colors, and breakpoints declared in `@theme`.
-- **Path aliases + barrels** — clean imports (`@pages`, `@ui-kit`, `@stores`, …).
+- **Pages-first structure** — `app` / `pages` / `shared` layers, boundaries enforced by ESLint.
 - **Accessible popup system** — portal-based modals with enter/exit transitions.
 - **Zustand** for lightweight client state, **react-transition-group** for animations.
 - Pre-wired **ESLint + Prettier** with a husky pre-commit hook.
@@ -47,14 +47,17 @@ pnpm dev        # https://localhost:5173 (self-signed cert)
 
 ## Scripts
 
-| Command           | Description                                 |
-| ----------------- | ------------------------------------------- |
-| `pnpm dev`        | Start the Vite dev server (HTTPS, `--host`) |
-| `pnpm build`      | Type-check (`tsc`) and build to `dist/`     |
-| `pnpm preview`    | Serve the production build locally          |
-| `pnpm lint`       | Run ESLint with `--fix`                     |
-| `pnpm lint:check` | Run ESLint without fixing (CI/verify)       |
-| `pnpm prettier`   | Format `src` with Prettier                  |
+| Command               | Description                                 |
+| --------------------- | ------------------------------------------- |
+| `pnpm dev`            | Start the Vite dev server (HTTPS, `--host`) |
+| `pnpm build`          | Type-check (`tsc`) and build to `dist/`     |
+| `pnpm preview`        | Serve the production build locally          |
+| `pnpm lint`           | Run ESLint with `--fix`                     |
+| `pnpm lint:check`     | Run ESLint without fixing (CI/verify)       |
+| `pnpm prettier`       | Format `src` with Prettier                  |
+| `pnpm prettier:check` | Check `src` formatting without writing      |
+| `pnpm typecheck`      | Type-check only (`tsc --noEmit`)            |
+| `pnpm knip`           | Find unused files, exports and dependencies |
 
 > [!NOTE]
 > There is no test runner configured. A husky pre-commit hook runs ESLint + Prettier on
@@ -64,35 +67,39 @@ pnpm dev        # https://localhost:5173 (self-signed cert)
 
 ```
 src/
-├── app.tsx            # Root composition: PopupsProvider > MainPage
-├── main.tsx           # Entry point
-├── index.css          # Tailwind @theme + global base layer (fluid rem scaling)
-├── components/        # Shared components
-├── ui-kit/            # Reusable UI primitives (e.g. popup)
-├── pages/             # Page-level components
-├── providers/         # React context providers
-├── hooks/             # Custom hooks
-├── stores/            # Zustand stores
-├── tokens/            # Design tokens (colors)
-├── constants/         # App-wide constants
-└── utils/             # Utilities (incl. the cn() class-merge helper)
+├── main.tsx              # Entry point
+├── app/                  # Root component, providers, global styles
+│   ├── app.tsx
+│   ├── providers/        # React context providers
+│   └── styles/index.css  # Tailwind @theme + global base layer (fluid rem scaling)
+├── pages/<name>/         # One folder per page: page component + its private code
+└── shared/               # Code used by two or more pages
+    ├── ui/<unit>/        # Reusable UI primitives (e.g. popup)
+    ├── stores/           # Zustand stores
+    ├── utils/            # Utilities (incl. the cn() class-joining helper)
+    ├── models/           # Shared helper types
+    ├── tokens/           # JS mirrors of design tokens
+    └── assets/
 ```
 
-Each domain folder exposes an `index.ts` barrel and a `@alias` (configured in
-`tsconfig.json`). Always import from the alias, never a deep path.
+Start new code in the page that needs it; move it to `shared/` when a second page does.
+Import a page as `@pages/<name>` and shared code as `@shared/ui/<unit>` or `@shared/<folder>`:
+only through an `index.ts`, never a file inside it. ESLint enforces this.
+See [`docs/agents/rules/architecture.md`](docs/agents/rules/architecture.md).
 
-| Adding a…             | Where                                   | How to wire it                                              |
-| --------------------- | --------------------------------------- | ----------------------------------------------------------- |
-| Component / UI / page | `src/{components,ui-kit,pages}/<name>/` | create the folder + `index.ts`, export from the barrel      |
-| Hook                  | `src/hooks/use-<name>.ts`               | export from `src/hooks/index.ts`                            |
-| Store                 | `src/stores/use-<name>.ts`              | export from `src/stores/index.ts`                           |
-| Provider              | `src/providers/<name>-provider/`        | export from `providers/index.ts` **and** mount in `app.tsx` |
-| Design token          | `@theme` in `src/index.css`             | use the generated utility (`bg-*`, `font-*`, …)             |
+| Adding a…    | Where                                  | How to wire it                                            |
+| ------------ | -------------------------------------- | --------------------------------------------------------- |
+| Page         | `src/pages/<name>/`                    | `index.ts` exports the page; render it from `app/app.tsx` |
+| UI primitive | `src/shared/ui/<name>/`                | folder + `index.ts`                                       |
+| Shared hook  | `src/shared/hooks/use-<name>.ts`       | create the folder and its `index.ts` on first use         |
+| Store        | `src/shared/stores/use-<name>.ts`      | export from `src/shared/stores/index.ts`                  |
+| Provider     | `src/app/providers/<name>-provider/`   | folder + `index.ts`, mount in `app/app.tsx`               |
+| Design token | `@theme` in `src/app/styles/index.css` | use the generated utility (`bg-*`, `font-*`, …)           |
 
 ## Styling system
 
 The core idea: **author every size in `rem` as if it were `px`, and the whole layout
-scales fluidly with the viewport.** Configured in `src/index.css`.
+scales fluidly with the viewport.** Configured in `src/app/styles/index.css`.
 
 - `html` has a `vw`-based font-size (`calc(100vw / 1920)` desktop, `calc(100vw / 480)` below 1000px), making
   **`1rem = 1px`** at the design width. `body` sets a `16rem` (≈16px) base text size,
@@ -108,7 +115,7 @@ scales fluidly with the viewport.** Configured in `src/index.css`.
   `--breakpoint-desktop` from the document at runtime.
 
 - Style with utility classes; merge/conditionally join them with the **`cn(...)`** helper
-  from `@utils`.
+  from `@shared/utils`.
 
 ## Browser support
 

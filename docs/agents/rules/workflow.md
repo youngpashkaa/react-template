@@ -22,7 +22,7 @@ paths:
 | Vite config, aliases, CSS or `index.html` | `pnpm build`                                                             |
 | Docs only                                 | `pnpm prettier:check` does not cover them; check links and paths by hand |
 
-- `pnpm lint:check` lints the whole repo, not just `src`. `pnpm prettier:check` covers `src/**/*.{ts,tsx,js,json}` only; `src/index.css` is ignored.
+- `pnpm lint:check` lints the whole repo, not just `src`. `pnpm prettier:check` covers `src/**/*.{ts,tsx,js,json}` only; `src/app/styles/index.css` is ignored.
 - Do not report a check as passed unless you ran it. Name anything you did not verify.
 - The dev server uses HTTPS with a self-signed certificate. Run `pnpm dev` only when the task needs a browser.
 
@@ -35,7 +35,7 @@ Husky runs `pnpm pre-commit` → `lint-staged` on commit. It runs `eslint --cach
 - Package manager is pnpm; the version is pinned by `packageManager`.
 - `pnpm-workspace.yaml` holds `overrides` (security pins) and `allowBuilds`. Do not remove or loosen an override without checking why it exists in git history.
 - Add a dependency only when asked. Knip reports unused ones.
-- `knip.json` treats the top-level barrels (`src/*/index.ts`) as public entry points, so the template's unused building blocks are not reported. Files and exports not reachable from `src/main.tsx` or a barrel are.
+- `knip.json` treats the page and shared-unit barrels (`src/pages/*/index.ts`, `src/shared/*/index.ts`, `src/shared/ui/*/index.ts`) as public entry points, so the template's unused building blocks are not reported. Files and exports not reachable from `src/main.tsx` or a barrel are.
 
 ## Maintaining these docs
 
@@ -45,5 +45,6 @@ Husky runs `pnpm pre-commit` → `lint-staged` on commit. It runs `eslint --cach
 - Do not write dependency versions in the docs; read `package.json`.
 - When a profile is added, renamed or removed, update the table in `AGENTS.md` and the map in `docs/agents/README.md` in the same change.
 - When a check is added or removed, update the enforcement table in `AGENTS.md`.
+- The import boundaries are generated in `scripts/eslint/import-boundaries.js` from the folders in `src/pages` and `src/shared`. Adding a layer means changing that file, `tsconfig.json` aliases, `knip.json` entries and `architecture.md` together.
 - A rule is not "enforced" until a tool enforces it. Say "review only" otherwise.
 - Commit messages follow Conventional Commits.

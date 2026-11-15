@@ -11,7 +11,7 @@ paths:
 
 - TypeScript is `strict`, with `noUnusedLocals`, `noUnusedParameters` and `noFallthroughCasesInSwitch`. `noImplicitAny` is off. Unused variables fail `pnpm typecheck` and `pnpm build`.
 - Prettier: no semicolons, single quotes, 120 columns, trailing commas `es5`. Run `pnpm prettier` instead of formatting by hand.
-- ESLint flat config: TypeScript recommended, `react-hooks` (rules-of-hooks is an error, exhaustive-deps a warning), `react-refresh` (warning), `simple-import-sort` (error), Prettier.
+- ESLint flat config: TypeScript recommended, `react-hooks` (rules-of-hooks is an error, exhaustive-deps a warning), `react-refresh` (warning), `simple-import-sort` (error), `better-tailwindcss/enforce-canonical-classes` (error), `no-restricted-imports` import boundaries (error, see architecture.md), Prettier.
 - Import groups are `react`, then packages, then `@` aliases. The sorter fixes this; run `pnpm lint`.
 - Do not disable a lint rule to get past an error; fix the cause or ask.
 - Prefer named exports. A component file exports components only (`react-refresh/only-export-components`).
