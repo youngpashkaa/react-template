@@ -22,7 +22,7 @@ docs/agents/
 
 ## How each agent loads them
 
-- **Codex** reads `AGENTS.md` from the repository root down to the working directory. It has no `@` imports, no `paths` frontmatter and no automatic loading of other files. The table in `AGENTS.md` tells it which profile to open for a task. There is a combined size limit (`project_doc_max_bytes`, 32 KiB by default), so keep `AGENTS.md` short.
+- **Codex** reads `AGENTS.md` from the repository root down to the working directory. Its docs describe no `@` imports and no `paths` frontmatter, so do not rely on either; it does not load other files on its own. The table in `AGENTS.md` tells it which profile to open for a task. The combined size limit is `project_doc_max_bytes`, 32 KiB by default, so keep `AGENTS.md` short.
 - **Claude Code** reads `CLAUDE.md`, which imports `AGENTS.md`. Files in `.claude/rules` load automatically: `paths` frontmatter loads a profile when Claude reads a matching file. Everything that must apply to every task stays in `AGENTS.md`, because a glob can miss.
 
 ## Map
@@ -44,4 +44,4 @@ Every file in this directory is listed above. Add a row when you add a file.
 - Claude Code: `/memory` lists loaded instruction files; `/context` shows what is in context. Read a `.tsx` file and confirm `styling.md` appears.
 - Codex: start a session and ask which instruction files it loaded. Then give it a styling task and check that it opens `styling.md`.
 - Windows: a checkout without symlink support turns `.claude/rules` into a plain file. Enable symlinks, or replace it with `@docs/agents/rules/<file>.md` imports in `CLAUDE.md`.
-- Research and sources: [../research/agent-friendly-docs.md](../research/agent-friendly-docs.md).
+- Sources: [Codex: AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [Claude Code: memory and rules](https://code.claude.com/docs/en/memory).

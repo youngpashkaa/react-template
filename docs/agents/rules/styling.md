@@ -25,7 +25,7 @@ The layout is desktop-first by convention, which is the opposite of Tailwind's m
 - `desktop:` is `min-width: 1000px`.
 - `max-desktop:` is the exact complement (`width < 1000px`). In plain CSS use `@variant max-desktop { ... }`, not a `max-width` media query.
 - `sm:`, `md:`, `lg:` and the other defaults are cleared and produce nothing. Do not add them back.
-- `--breakpoint-desktop` in `src/index.css` is the only definition (in an `@theme static` block so it stays in `:root`). JavaScript reads it with `getComputedStyle` in `use-device.ts`; do not add a JS constant.
+- `--breakpoint-desktop` in `src/index.css` is the only definition (in an `@theme static` block so it stays in `:root`). JavaScript reads it with `getComputedStyle` in `use-device.ts`, which throws if the variable is missing; do not add a JS constant.
 
 ## Tokens
 

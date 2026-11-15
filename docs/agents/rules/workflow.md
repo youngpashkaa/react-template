@@ -28,7 +28,7 @@ paths:
 
 ## Hooks
 
-Husky runs `pnpm pre-commit` → `lint-staged` on commit. It runs `pnpm lint` and `pnpm prettier`, which apply to the whole project rather than only the staged files; expect unrelated files to be reformatted. Do not bypass the hook with `--no-verify`.
+Husky runs `pnpm pre-commit` → `lint-staged` on commit. It runs `eslint --cache --fix` and `prettier --write` on the staged `js`, `jsx`, `ts` and `tsx` files only. Do not bypass the hook with `--no-verify`.
 
 ## Dependencies
 

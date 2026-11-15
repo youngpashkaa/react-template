@@ -5,8 +5,13 @@ interface DeviceStore {
   isMobile: boolean
 }
 
-const readDesktopBreakpoint = () =>
-  getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-desktop').trim()
+const readDesktopBreakpoint = () => {
+  const value = getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-desktop').trim()
+  if (!value) {
+    throw new Error('--breakpoint-desktop is not defined: keep it in the `@theme static` block of src/index.css')
+  }
+  return value
+}
 
 const checkIsMobile = () => !window.matchMedia(`(min-width: ${readDesktopBreakpoint()})`).matches
 
