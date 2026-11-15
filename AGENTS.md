@@ -48,7 +48,7 @@ Wiring and map of all agent docs: [docs/agents/README.md](docs/agents/README.md)
 
 - `1rem` is not 16px. The root font size is `100vw / 1920` (desktop) or `100vw / 480` (mobile), so `1rem = 1px` at the design width.
 - Tailwind's `--text-*` and `--breakpoint-*` defaults are cleared: `text-sm`, `sm:` and `md:` produce nothing. Only `desktop:` and `max-desktop:` exist. The layout is desktop-first by convention.
-- The desktop breakpoint lives in three places: `--breakpoint-desktop` and a hard-coded `max-width` media query in `src/index.css`, and `Breakpoints.DESKTOP` in `src/tokens/breakpoints`. The values differ (1000, 999, 999.9). Change all three together.
+- The desktop breakpoint is defined once: `--breakpoint-desktop` in `src/index.css`. CSS uses `desktop:`, `max-desktop:` or `@variant max-desktop`; JavaScript reads the variable (see `use-device.ts`). Never hard-code `1000` or a `max-width` media query.
 - `cn()` only joins strings. It does not resolve conflicts, so the later class in the stylesheet wins, not the later in `className`. Never pass conflicting utilities.
 - `POPUP_DELAY` in `src/constants` must match the `300ms` durations in `popup-transitions.css`.
 - `src/index.css` is excluded from Prettier. Class order inside `cn(...)` and `className` is owned by the Prettier plugin; do not hand-sort.

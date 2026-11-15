@@ -1,13 +1,14 @@
 import debounce from 'lodash/debounce'
 import { create } from 'zustand'
 
-import { Breakpoints } from '@tokens'
-
 interface DeviceStore {
   isMobile: boolean
 }
 
-const checkIsMobile = () => window.innerWidth < Breakpoints.DESKTOP
+const readDesktopBreakpoint = () =>
+  getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-desktop').trim()
+
+const checkIsMobile = () => !window.matchMedia(`(min-width: ${readDesktopBreakpoint()})`).matches
 
 export const useDeviceStore = create<DeviceStore>((set) => {
   const handleWindowResize = debounce(() => {

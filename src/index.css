@@ -27,8 +27,10 @@
    */
   --text-*: initial;
   --breakpoint-*: initial;
+}
 
-  /* Keep in sync with Breakpoints.DESKTOP (999.9) in src/tokens/breakpoints */
+/* Single source of the desktop breakpoint: `static` keeps the variable in :root so useDeviceStore can read it. */
+@theme static {
   --breakpoint-desktop: 1000px;
 }
 
@@ -71,7 +73,7 @@
     overflow: hidden;
   }
 
-  @media screen and (max-width: 999px) {
+  @variant max-desktop {
     /* Only the rem unit changes on mobile (1rem = 1px at a 480px-wide viewport); body stays 16rem and scales with it. */
     html {
       font-size: calc(100vw / 480);

@@ -78,7 +78,7 @@ src/
 ├── providers/         # React context providers
 ├── hooks/             # Custom hooks
 ├── stores/            # Zustand stores
-├── tokens/            # Design tokens (colors, breakpoints)
+├── tokens/            # Design tokens (colors)
 ├── constants/         # App-wide constants
 └── utils/             # Utilities (incl. the cn() class-merge helper)
 ```
@@ -99,7 +99,7 @@ Each domain folder exposes an `index.ts` barrel and a `@alias` (configured in
 The core idea: **author every size in `rem` as if it were `px`, and the whole layout
 scales fluidly with the viewport.** Configured in `src/index.css`.
 
-- `html` has a `vw`-based font-size (`calc(100vw / 1920)` desktop, `calc(100vw / 480)` below 999px), making
+- `html` has a `vw`-based font-size (`calc(100vw / 1920)` desktop, `calc(100vw / 480)` below 1000px), making
   **`1rem = 1px`** at the design width. `body` sets a `16rem` (≈16px) base text size,
   inherited by everything — including modals in the `#popups` portal.
 - **`--spacing: 4rem`** in `@theme` rescales Tailwind's spacing scale so **1 unit = 4rem
@@ -109,8 +109,8 @@ scales fluidly with the viewport.** Configured in `src/index.css`.
 - **Custom breakpoint** `--breakpoint-desktop: 1000px` (default `sm/md/lg/…` are cleared):
   - `desktop:` → `min-width: 1000px` · `max-desktop:` → mobile overrides
 
-  Keep breakpoints in `px`, not `rem`. `Breakpoints.DESKTOP` in `src/tokens` mirrors this
-  value for JS use (`use-device.ts`) and must stay in sync.
+  Keep breakpoints in `px`, not `rem`. This is the only definition: `use-device.ts` reads
+  `--breakpoint-desktop` from the document at runtime.
 
 - Style with utility classes; merge/conditionally join them with the **`cn(...)`** helper
   from `@utils`.
