@@ -1,120 +1,71 @@
 # AGENTS.md
 
-Guidance for AI agents (Claude Code, Cursor, etc.) working in this repository.
-
-## Project
-
-Single-page app: **Vite 8 + React 19 + TypeScript**, package manager **pnpm**. Styling is
-**Tailwind CSS v4** (CSS-first config, no `tailwind.config.js`). The app entry is
-`src/main.tsx` → `src/app.tsx`, which wraps the page tree in `PopupsProvider` around
-`MainPage`.
-
-This is a lean starter: several path aliases (`@api`, `@models`, `@router`) point to
-directories that don't exist yet — create them as features land.
+Single-page React starter: Vite, React, TypeScript, Tailwind CSS v4 (CSS-first), Zustand, pnpm.
+Versions are in `package.json`. Entry: `src/main.tsx` → `src/app.tsx`.
+Browsers: modern only (Tailwind v4 floor). Do not reintroduce a legacy build target.
 
 ## Commands
 
 ```bash
-pnpm dev          # vite dev server (HTTPS via basic-ssl, --host)
-pnpm build        # tsc (typecheck) && vite build  → dist/
-pnpm preview      # serve the production build
-pnpm lint:check   # eslint, no fixes (use this to verify)
-pnpm lint         # eslint --fix
-pnpm prettier     # prettier --write src
+pnpm dev             # Vite dev server over HTTPS (self-signed cert), --host
+pnpm build           # tsc && vite build
+pnpm typecheck       # tsc --noEmit
+pnpm lint:check      # ESLint, no fixes
+pnpm prettier:check  # Prettier check on src
+pnpm knip            # unused files, exports, dependencies
+pnpm lint            # ESLint --fix
+pnpm prettier        # Prettier --write on src
 ```
 
-- **No test framework is configured** — there are no tests to run.
-- A **husky pre-commit hook** runs `lint-staged` → `eslint --fix` + `prettier` on staged
-  `*.{js,jsx,ts,tsx}`. Commits with lint errors are blocked.
-- Browser target is **modern only** (Chrome 111+/Safari 16.4+). The `@vitejs/plugin-legacy`
-  was intentionally removed; Tailwind v4 relies on cascade layers, `@property`, and
-  `color-mix`. Do not reintroduce IE11/old-Safari targets.
+Before finishing a code change: `pnpm typecheck && pnpm lint:check && pnpm prettier:check`.
+Run `pnpm knip` after adding or removing files, exports or dependencies.
+There is no test framework. Husky runs `lint-staged` on commit; lint errors block the commit.
+Commit messages use Conventional Commits (`feat(...)`, `fix(...)`, `chore(deps): ...`).
 
-## Styling system (read this before touching any UI)
+## Read before editing
 
-The core idea: **author every size in `rem` as if it were `px`, and the whole layout
-scales fluidly with the viewport.** This is configured entirely in `src/index.css`.
+Claude Code loads these automatically when it reads matching files. Codex does not: open the file yourself first.
 
-1. **Fluid root font-size** (`@layer base`): `html { font-size: calc(100vw / 1920) }` on desktop,
-   `calc(100vw / 480)` below 999px. At the design widths (1920px / 480px) this makes **`1rem = 1px`**, so a `24rem`
-   value renders ~24px at the design size and scales up/down with the window.
+| Task                                                            | Read                                                 |
+| --------------------------------------------------------------- | ---------------------------------------------------- |
+| Markup, Tailwind classes, `src/index.css`, tokens, animations   | [styling.md](docs/agents/rules/styling.md)           |
+| Adding or moving modules, aliases, barrels, providers, state    | [architecture.md](docs/agents/rules/architecture.md) |
+| TypeScript, ESLint or Prettier rules, naming                    | [code-style.md](docs/agents/rules/code-style.md)     |
+| Scripts, dependencies, hooks, `pnpm-workspace.yaml`, these docs | [workflow.md](docs/agents/rules/workflow.md)         |
 
-2. **`--spacing: 4rem`** in `@theme` rescales Tailwind's spacing scale so **1 unit = 4rem
-   (≈4px at design width)** — identical px semantics to stock Tailwind, but in scalable rem:
-   - `w-4` → `width: calc(var(--spacing) * 4)` = `16rem`
-   - `p-10` → `40rem`, `top-6` → `24rem`, `pt-5 px-2.5` → `20rem / 10rem`
-   - Use arbitrary values for non-multiples or non-spacing props:
-     `rounded-[12rem]`, `h-[3.2rem]`, `h-[var(--full-height)]`, `bg-[#0d1a2a]`.
+Wiring and map of all agent docs: [docs/agents/README.md](docs/agents/README.md).
 
-3. **Custom breakpoint** `--breakpoint-desktop: 1000px` (and **Tailwind's default
-   `sm/md/lg/xl/2xl` breakpoints are cleared** via `--breakpoint-*: initial`). You get two
-   variants and only these:
-   - `desktop:` → `@media (min-width: 1000px)`
-   - `max-desktop:` → `@media (max-width: 999.98px)` (mobile overrides)
+## Hard constraints
 
-   Keep breakpoints in **px**, never rem — `rem` in media queries is relative to the browser
-   root (16px), not our `vw` root hack.
+- Import through the domain alias barrel (`@hooks`, `@ui-kit`), never a deep path. Inside a module use relative imports, not its own or an ancestor barrel.
+- Style with Tailwind utilities only. No styled-components, no `tailwind.config.js`, no inline `style` for sizes.
+- Write sizes in `rem` as design pixels (see Gotchas). New tokens go in `@theme` in `src/index.css`.
+- Build class names from complete static strings; never assemble them from props.
+- Do not add a dependency, a data-fetching layer or a router without asking. None exists yet.
+- Do not edit the `overrides` in `pnpm-workspace.yaml`: they are security pins.
 
-4. **Default `--text-*` scale is also cleared** (it would render ~1px under our root
-   font-size). Define text sizes in `@theme` when needed (e.g. `--text-base: 13rem`).
+## Gotchas
 
-5. **Design tokens live in `@theme`**: colors (`bg-black`, `text-white`, `bg-popup`,
-   `bg-popup-mobile`) and the font (`font-inter`, the Inter variable font
-   from `public/fonts`). Add new tokens here, not in component files.
+- `1rem` is not 16px. The root font size is `100vw / 1920` (desktop) or `100vw / 480` (mobile), so `1rem = 1px` at the design width.
+- Tailwind's `--text-*` and `--breakpoint-*` defaults are cleared: `text-sm`, `sm:` and `md:` produce nothing. Only `desktop:` and `max-desktop:` exist. The layout is desktop-first by convention.
+- The desktop breakpoint lives in three places: `--breakpoint-desktop` and a hard-coded `max-width` media query in `src/index.css`, and `Breakpoints.DESKTOP` in `src/tokens/breakpoints`. The values differ (1000, 999, 999.9). Change all three together.
+- `cn()` only joins strings. It does not resolve conflicts, so the later class in the stylesheet wins, not the later in `className`. Never pass conflicting utilities.
+- `POPUP_DELAY` in `src/constants` must match the `300ms` durations in `popup-transitions.css`.
+- `src/index.css` is excluded from Prettier. Class order inside `cn(...)` and `className` is owned by the Prettier plugin; do not hand-sort.
+- `pnpm build` is not needed for a type check: use `pnpm typecheck`.
 
-There are **no styled-components** — the project was migrated off it. Style with utility
-classes; use the `cn(...)` helper from `@utils` to merge/conditionally join class strings.
+## Where rules are enforced
 
-## Architecture & conventions
+| Rule                                                    | Enforced by                       |
+| ------------------------------------------------------- | --------------------------------- |
+| Types, unused locals and parameters                     | `pnpm typecheck` (strict)         |
+| Import order, hooks rules, formatting, class order      | ESLint, Prettier                  |
+| Own/ancestor barrel imports, `@app/*` deep imports      | ESLint `no-restricted-imports`    |
+| Unused files, exports and dependencies                  | Knip                              |
+| Folder layout, barrel wiring, styling conventions, a11y | Review only: no tool checks these |
 
-- **Path aliases + barrels.** Import via aliases defined in `tsconfig.json`
-  (`@providers`, `@ui-kit`, `@stores`, `@pages`, `@hooks`, `@components`, `@tokens`,
-  `@constants`, `@utils`, `@app/*`, `@images/*`). Every feature dir has an `index.ts`
-  barrel that re-exports its public surface; import from the alias, not deep paths.
+## Agent skills
 
-- **Popup system** (`src/ui-kit/popup`): `Popup` renders into a portal (`PopupPortal`) and
-  manages mount/unmount with a `POPUP_DELAY` (300ms) timer. `PopupLayout` does the
-  overlay/container/close markup. Enter/exit animations use `react-transition-group`
-  (`CSSTransition`); the classNames map lives in `popup-layout/animations.ts` and the
-  matching styles in the co-located `popup-transitions.css` (imported by the component).
-  If you change `POPUP_DELAY`, update the `300ms` transition durations in that CSS too.
-
-- **State.** Client state via small Zustand stores in `src/stores` (e.g. `use-device`
-  exposes `isMobile`). There is currently no server-state/data-fetching layer.
-
-- **Breakpoint duplication.** `Breakpoints.DESKTOP` (999.9) in
-  `src/tokens/breakpoints/breakpoints.ts` is read in JS (`use-device.ts`:
-  `window.innerWidth < Breakpoints.DESKTOP`). CSS can't import the TS constant, so it's
-  mirrored as `--breakpoint-desktop: 1000px` in `index.css`. **Change both together.**
-
-## Where to add code
-
-All code lives under `src/`, organised into top-level domain folders, each exposed
-through an `index.ts` **barrel** and an `@alias` (see `tsconfig.json` paths). Two layout
-patterns are used: **folder-per-unit** (a kebab-case folder + main file + `index.ts`) for
-components/pages/providers, and **flat files** for hooks/stores/constants.
-
-| Adding a…                 | Where                                                                 | How to wire it                                                                  |
-| ------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Shared **component**      | `src/components/<name>/`                                              | create the folder by hand + `index.ts`; add export to `src/components/index.ts` |
-| Reusable **UI primitive** | `src/ui-kit/<name>/`                                                  | create the folder by hand + `index.ts`; add export to `src/ui-kit/index.ts`     |
-| **Page**                  | `src/pages/<name>/`                                                   | create the folder by hand + `index.ts`; add export to `src/pages/index.ts`      |
-| **Hook**                  | `src/hooks/use-<name>.ts`                                             | add `export * from './use-<name>'` to `src/hooks/index.ts`                      |
-| **Store** (Zustand)       | `src/stores/use-<name>.ts`                                            | add `export * from './use-<name>'` to `src/stores/index.ts`                     |
-| **Provider**              | `src/providers/<name>-provider/` (`<name>-provider.tsx` + `index.ts`) | re-export from `src/providers/index.ts` **and** mount it in `src/app.tsx`       |
-| **Design token**          | `src/tokens/<group>/` (+ `index.ts`)                                  | re-export from `src/tokens/index.ts`                                            |
-| **Constant**              | `src/constants/<file>.ts`                                             | export from `src/constants/index.ts`                                            |
-| **Util**                  | `src/utils/`                                                          | export from `src/utils/index.ts` (`@utils`)                                     |
-
-Naming: **kebab-case** files/folders, **PascalCase** component/provider exports,
-`use-x.ts` → `useX` for hooks and stores. Always re-export from the domain's `index.ts`
-and import via the alias (`@hooks`, `@stores`, …), never a deep path. Providers also need
-mounting — after creating the folder, add it to `providers/index.ts` and compose it in
-`app.tsx`.
-
-## Conventions to follow
-
-- TypeScript is strict (`noUnusedLocals`, `noUnusedParameters`); unused vars fail the build.
-- ESLint enforces `simple-import-sort` (imports must be sorted) and Prettier — run
-  `pnpm lint` before committing or the hook will reformat.
-- Commit messages follow Conventional Commits (`feat(...)`, `chore(deps): ...`, `fix(...)`).
+Issue tracker: local markdown files under `.scratch/` (gitignored). See [issue-tracker.md](docs/agents/issue-tracker.md).
+Triage labels: default five-label vocabulary. See [triage-labels.md](docs/agents/triage-labels.md).
+Domain docs: single-context. See [domain.md](docs/agents/domain.md).

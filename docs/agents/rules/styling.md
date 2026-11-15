@@ -1,0 +1,59 @@
+---
+paths:
+  - 'src/**/*.{tsx,css}'
+  - 'src/tokens/**'
+  - 'index.html'
+  - '.prettierrc'
+---
+
+# Styling with Tailwind CSS v4
+
+Tailwind v4 is configured in CSS only: `src/index.css` starts with `@import 'tailwindcss'` and declares tokens in `@theme`. There is no `tailwind.config.js` and no PostCSS config.
+
+## Fluid rem
+
+- `html { font-size: calc(100vw / 1920) }` on desktop and `calc(100vw / 480)` below 999px. At the design width `1rem = 1px`.
+- Write every size as the design pixel value in `rem`: `rounded-[12rem]`, `h-[3.2rem]`, `text-[16rem]`.
+- `--spacing: 4rem`, so one spacing unit is about 4px at the design width: `w-4` is `16rem`, `p-10` is `40rem`.
+- Use arbitrary values for non-multiples and non-spacing properties. Use the v4 variable syntax: `h-(--full-height)`.
+- Media queries stay in `px`; `rem` there is relative to the browser root, not to this system.
+
+## Breakpoints
+
+The layout is desktop-first by convention, which is the opposite of Tailwind's mobile-first default.
+
+- `desktop:` is `min-width: 1000px`.
+- `max-desktop:` is the mobile override range.
+- `sm:`, `md:`, `lg:` and the other defaults are cleared and produce nothing. Do not add them back.
+- The breakpoint value exists in three places; see the gotcha in `AGENTS.md`.
+
+## Tokens
+
+- Colors, fonts and other tokens go in `@theme` in `src/index.css`, not in component files. Current tokens: `--color-black`, `--color-white`, `--color-popup`, `--color-popup-mobile`, `--font-inter`.
+- Tailwind's default `--text-*` scale is cleared, because it would render at about 1px under the vw root. Add a `--text-*` token if a named text size is needed.
+- Use `:root` for plain CSS variables that need no utility (for example `--full-height`).
+- `src/tokens/*.ts` mirrors some values for JavaScript. Change the CSS and the mirror together.
+- There is no dark mode. Do not add dark-mode variants.
+
+## Writing classes
+
+- Class names must be complete static strings. Tailwind scans source as plain text, so `` `bg-${color}` `` produces nothing. Map props or state to full class names.
+- Use `cn(...)` from `@utils` to join classes conditionally. It does not merge conflicts: never pass two utilities that set the same property. Expose a prop or variant instead of letting callers override with `className`.
+- Class order is owned by `prettier-plugin-tailwindcss` (configured for `cn`). Do not hand-sort; run `pnpm prettier`.
+- `cva`, `clsx` and `tailwind-merge` are not installed. Do not use them without asking.
+
+## v3 habits that break in v4
+
+- `bg-[--var]` is now `bg-(--var)`.
+- The important modifier goes at the end: `flex!`.
+- `bg-opacity-*` is removed: use `bg-black/50`.
+- `shadow-sm` became `shadow-xs`, `outline-none` became `outline-hidden`, `ring` became `ring-3`.
+- The default border color is `currentColor`.
+
+## Component-local CSS
+
+Plain `.css` next to a component is only for transitions that utilities cannot express (`popup-transitions.css`). Import it from the component. If you change `POPUP_DELAY`, update the `300ms` durations there.
+
+## Accessibility
+
+Project convention, not tool-enforced: use semantic elements, keep every control keyboard-operable with a visible focus state, and give icon-only buttons an `aria-label` (as `Popup` does). Check keyboard behaviour by hand when you change interactive markup.
