@@ -1,4 +1,5 @@
 import eslintConfigPrettier from 'eslint-config-prettier'
+import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -94,6 +95,12 @@ export default [
     },
   },
   ...domainImportRules,
+  {
+    files: sourceFiles,
+    plugins: { 'better-tailwindcss': eslintPluginBetterTailwindcss },
+    settings: { 'better-tailwindcss': { entryPoint: 'src/index.css' } },
+    rules: { 'better-tailwindcss/enforce-canonical-classes': 'error' },
+  },
   eslintConfigPrettier,
   {
     plugins: {

@@ -37,9 +37,11 @@ The layout is desktop-first by convention, which is the opposite of Tailwind's m
 
 ## Writing classes
 
+- Tailwind scans only `src` (`source('.')` on the import in `src/index.css`). Classes used only in `index.html`, docs or other folders are not generated.
 - Class names must be complete static strings. Tailwind scans source as plain text, so `` `bg-${color}` `` produces nothing. Map props or state to full class names.
 - Use `cn(...)` from `@utils` to join classes conditionally. It does not merge conflicts: never pass two utilities that set the same property. Expose a prop or variant instead of letting callers override with `className`.
 - Class order is owned by `prettier-plugin-tailwindcss` (configured for `cn`). Do not hand-sort; run `pnpm prettier`.
+- Write canonical classes: `z-2` not `z-[2]`, `size-8` not `h-8 w-8`, `transform-[...]` not `[transform:...]`. ESLint `better-tailwindcss/enforce-canonical-classes` reports the rest and `pnpm lint` fixes it. It reads `src/index.css`, so it knows the custom `--spacing` and breakpoints.
 - `cva`, `clsx` and `tailwind-merge` are not installed. Do not use them without asking.
 
 ## v3 habits that break in v4

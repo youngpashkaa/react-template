@@ -60,6 +60,7 @@ Wiring and map of all agent docs: [docs/agents/README.md](docs/agents/README.md)
 | ------------------------------------------------------- | --------------------------------- |
 | Types, unused locals and parameters                     | `pnpm typecheck` (strict)         |
 | Import order, hooks rules, formatting, class order      | ESLint, Prettier                  |
+| Canonical Tailwind class names (`z-2`, `size-8`)        | ESLint `better-tailwindcss`       |
 | Own/ancestor barrel imports, `@app/*` deep imports      | ESLint `no-restricted-imports`    |
 | Unused files, exports and dependencies                  | Knip                              |
 | Folder layout, barrel wiring, styling conventions, a11y | Review only: no tool checks these |
