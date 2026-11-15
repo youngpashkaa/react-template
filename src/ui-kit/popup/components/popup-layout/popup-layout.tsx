@@ -4,10 +4,10 @@ import { clearAllBodyScrollLocks } from 'body-scroll-lock'
 import { CSSTransition } from 'react-transition-group'
 
 import { POPUP_DELAY } from '@constants'
-import { PopupProps } from '@ui-kit'
 import { cn } from '@utils'
 
 import './popup-transitions.css'
+import { PopupProps } from '../../types'
 import { contentAnimation, overlayAnimation } from './animations'
 
 export const PopupLayout: FC<PopupProps> = ({ onClose, opened, children, mounted, className, ...rest }) => {

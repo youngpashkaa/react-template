@@ -7,5 +7,3 @@ export const MainPage: FC = () => {
     </div>
   )
 }
-
-export default MainPage

@@ -25,7 +25,6 @@ dist-ssr
 *.sln
 *.sw?
 
-instructions
 
 # Local markdown issue tracker
 .scratch

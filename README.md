@@ -36,7 +36,7 @@ is a **fluid, rem-based design system**: every size is authored in `rem` as if i
 
 ### Prerequisites
 
-- **Node.js** 18+
+- **Node.js** 20.19+ or 22.12+ (Vite requirement)
 - **pnpm** (`npm i -g pnpm`)
 
 ### Install & run

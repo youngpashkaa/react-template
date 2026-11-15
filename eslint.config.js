@@ -12,9 +12,40 @@ import typescriptParser from '@typescript-eslint/parser'
 const sourceFiles = ['src/**/*.{ts,tsx}']
 const toolingFiles = ['*.{js,ts}']
 
+const domainAliases = {
+  components: '@components',
+  constants: '@constants',
+  hooks: '@hooks',
+  models: '@models',
+  pages: '@pages',
+  providers: '@providers',
+  stores: '@stores',
+  tokens: '@tokens',
+  'ui-kit': '@ui-kit',
+  utils: '@utils',
+}
+
+const deepImportPattern = {
+  group: ['@app/*'],
+  message: 'Import through the domain alias barrel instead of a deep @app/* path.',
+}
+
+const domainImportRules = Object.entries(domainAliases).map(([dir, alias]) => ({
+  files: [`src/${dir}/**/*.{ts,tsx}`],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [{ name: alias, message: `Use a relative import inside ${alias}, not its own barrel.` }],
+        patterns: [deepImportPattern],
+      },
+    ],
+  },
+}))
+
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'src/api/generated/**'],
+    ignores: ['dist/**', 'node_modules/**'],
   },
   {
     ...eslint.configs.recommended,
@@ -56,6 +87,13 @@ export default [
       ],
     },
   },
+  {
+    files: sourceFiles,
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [deepImportPattern] }],
+    },
+  },
+  ...domainImportRules,
   eslintConfigPrettier,
   {
     plugins: {
