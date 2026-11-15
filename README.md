@@ -5,11 +5,6 @@ styled with **Tailwind CSS v4** (CSS-first, no `tailwind.config.js`). Its defini
 is a **fluid, rem-based design system**: every size is authored in `rem` as if it were
 `px`, and the entire layout scales proportionally with the viewport.
 
-> [!NOTE]
-> This is the **`main`** branch (Tailwind CSS v4). A parallel **`styled-components`** branch
-> implements the same app with styled-components instead — same fluid design system,
-> different styling engine.
-
 ## Features
 
 - **Fluid rem-based scaling** — design in `px`, render in scalable `rem`; one root
