@@ -15,7 +15,7 @@ paths:
 - Import groups are `react`, then packages, then `@` aliases. The sorter fixes this; run `pnpm lint`.
 - Do not disable a lint rule to get past an error; fix the cause or ask.
 - Prefer named exports. A component file exports components only (`react-refresh/only-export-components`).
-- Comments are not regulated. Write one when the reason is not visible in the code (for example the `POPUP_DELAY` and `300ms` coupling).
+- Comments are not regulated. Write one when the reason is not visible in the code.
 - Warnings do not block commits. Mention any you leave behind.
 
 Exact settings are in `eslint.config.js`, `.prettierrc` and `tsconfig.json`. Change a convention and its configuration together.

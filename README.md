@@ -16,8 +16,7 @@ is a **fluid, rem-based design system**: every size is authored in `rem` as if i
   font-size in `vw` makes the whole UI scale with the viewport (see [Styling](#styling-system)).
 - **Tailwind v4 CSS-first config** — tokens, colors, and breakpoints declared in `@theme`.
 - **Path aliases + barrels** — clean imports (`@pages`, `@ui-kit`, `@stores`, …).
-- **Accessible popup system** — portal-based modals with enter/exit transitions.
-- **Zustand** for lightweight client state, **react-transition-group** for animations.
+- **Zustand** for lightweight client state.
 - Pre-wired **ESLint + Prettier** with a husky pre-commit hook.
 
 ## Tech stack
@@ -29,7 +28,6 @@ is a **fluid, rem-based design system**: every size is authored in `rem` as if i
 | Language   | TypeScript (strict)                     |
 | Styling    | Tailwind CSS v4 (`@tailwindcss/vite`)   |
 | State      | Zustand                                 |
-| Animations | react-transition-group                  |
 | Tooling    | pnpm, ESLint, Prettier, husky           |
 
 ## Getting started
@@ -69,11 +67,11 @@ pnpm dev        # https://localhost:5173 (self-signed cert)
 
 ```
 src/
-├── app.tsx            # Root composition: PopupsProvider > MainPage
+├── app.tsx            # Root composition: MainPage
 ├── main.tsx           # Entry point
 ├── index.css          # Tailwind @theme + global base layer (fluid rem scaling)
 ├── components/        # Shared components
-├── ui-kit/            # Reusable UI primitives (e.g. popup)
+├── ui-kit/            # Reusable UI primitives
 ├── pages/             # Page-level components
 ├── providers/         # React context providers
 ├── hooks/             # Custom hooks
@@ -101,7 +99,7 @@ scales fluidly with the viewport.** Configured in `src/index.css`.
 
 - `html` has a `vw`-based font-size (`calc(100vw / 1920)` desktop, `calc(100vw / 480)` below 1000px), making
   **`1rem = 1px`** at the design width. `body` sets a `16rem` (≈16px) base text size,
-  inherited by everything — including modals in the `#popups` portal.
+  inherited by everything.
 - **`--spacing: 4rem`** in `@theme` rescales Tailwind's spacing scale so **1 unit = 4rem
   (≈4px at design width)** — same px semantics as stock Tailwind, but in scalable rem:
   - `w-4` → `16rem`, `p-10` → `40rem`, `top-6` → `24rem`
