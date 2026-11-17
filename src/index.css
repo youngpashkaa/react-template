@@ -16,8 +16,6 @@
 
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-popup: #0d1a2a;
-  --color-popup-mobile: #01203d;
 
   --font-inter: 'Inter', 'Arial', sans-serif;
 
@@ -59,18 +57,13 @@
     max-width: 100vw;
     height: 100%;
     color: var(--color-white);
-    /* Base text size for the whole app: 16rem ≈ 16px, scaling with the rem unit.
-       Set on <body> (not #root) so portaled #popups text inherits it too. */
+    /* Base text size for the whole app: 16rem ≈ 16px, scaling with the rem unit. */
     font-size: 16rem;
   }
 
   #root {
     overflow: auto;
     height: var(--full-height);
-  }
-
-  #root.no-scroll {
-    overflow: hidden;
   }
 
   @variant max-desktop {

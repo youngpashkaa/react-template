@@ -29,7 +29,7 @@ The layout is desktop-first by convention, which is the opposite of Tailwind's m
 
 ## Tokens
 
-- Colors, fonts and other tokens go in `@theme` in `src/index.css`, not in component files. Current tokens: `--color-black`, `--color-white`, `--color-popup`, `--color-popup-mobile`, `--font-inter`.
+- Colors, fonts and other tokens go in `@theme` in `src/index.css`, not in component files. Current tokens: `--color-black`, `--color-white`, `--font-inter`.
 - Tailwind's default `--text-*` scale is cleared, because it would render at about 1px under the vw root. Add a `--text-*` token if a named text size is needed.
 - Use `:root` for plain CSS variables that need no utility (for example `--full-height`).
 - `src/tokens/colors` mirrors black and white for JavaScript. Change the CSS and the mirror together.
@@ -54,8 +54,8 @@ The layout is desktop-first by convention, which is the opposite of Tailwind's m
 
 ## Component-local CSS
 
-Plain `.css` next to a component is only for transitions that utilities cannot express (`popup-transitions.css`). Import it from the component. If you change `POPUP_DELAY`, update the `300ms` durations there.
+Plain `.css` next to a component is only for styles that utilities cannot express (for example keyframe-driven transitions). Import it from the component.
 
 ## Accessibility
 
-Project convention, not tool-enforced: use semantic elements, keep every control keyboard-operable with a visible focus state, and give icon-only buttons an `aria-label` (as `Popup` does). Check keyboard behaviour by hand when you change interactive markup.
+Project convention, not tool-enforced: use semantic elements, keep every control keyboard-operable with a visible focus state, and give icon-only buttons an `aria-label`. Check keyboard behaviour by hand when you change interactive markup.

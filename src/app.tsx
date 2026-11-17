@@ -1,12 +1,7 @@
 import { MainPage } from '@pages'
-import { PopupsProvider } from '@providers'
 
 const App = () => {
-  return (
-    <PopupsProvider>
-      <MainPage />
-    </PopupsProvider>
-  )
+  return <MainPage />
 }
 
 export default App
